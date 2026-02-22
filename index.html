@@ -1,103 +1,1333 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hlas Landing Page Concepts</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif;
-            background: #111;
-            color: #e5e5e5;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 3rem 1.5rem;
-        }
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.03em;
-        }
-        .subtitle {
-            color: #888;
-            font-size: 1.1rem;
-            margin-bottom: 3rem;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-            max-width: 800px;
-            width: 100%;
-        }
-        a.card {
-            display: block;
-            text-decoration: none;
-            color: inherit;
-            border: 1px solid #2a2a2a;
-            border-radius: 12px;
-            padding: 2rem;
-            transition: all 0.2s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        a.card:hover {
-            border-color: #E91E63;
-            transform: translateY(-2px);
-            background: #E91E6310;
-        }
-        a.card .num {
-            font-size: 4rem;
-            font-weight: 800;
-            line-height: 1;
-            margin-bottom: 0.75rem;
-            color: #E91E63;
-        }
-        a.card h2 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-        a.card p {
-            font-size: 0.9rem;
-            color: #888;
-            line-height: 1.5;
-        }
-        @media (max-width: 600px) {
-            .grid { grid-template-columns: 1fr; }
-            h1 { font-size: 1.8rem; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hlas — Voice to Text for macOS</title>
+<meta name="description" content="Hlas is a macOS menu bar dictation app. Press a hotkey, speak, text appears. Local AI or cloud. 60+ languages.">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --pink: #E91E63;
+  --black: #000;
+  --white: #FFF;
+  --mono: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+  --sans: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  color: var(--black);
+  background: var(--white);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ---- UTILITY ---- */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+.section-white { background: var(--white); color: var(--black); }
+.section-pink { background: var(--pink); color: var(--white); }
+.section-black { background: var(--black); color: var(--white); }
+
+.label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  display: inline-block;
+  margin-bottom: 16px;
+}
+.label--black { color: var(--black); }
+.label--white { color: var(--white); }
+.label--pink { color: var(--pink); }
+
+h1, h2, h3 { font-weight: 800; line-height: 1.05; letter-spacing: -0.03em; }
+
+/* ---- WAVEFORM DIVIDER ---- */
+.waveform-divider {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  height: 32px;
+  padding: 16px 0;
+  overflow: hidden;
+}
+.waveform-divider .bar {
+  width: 3px;
+  display: inline-block;
+  animation: wave 1.2s ease-in-out infinite;
+}
+.waveform-divider--pink .bar { background: var(--pink); }
+.waveform-divider--white .bar { background: var(--white); }
+.waveform-divider--black .bar { background: var(--white); }
+
+@keyframes wave {
+  0%, 100% { height: 6px; }
+  50% { height: 28px; }
+}
+
+/* ---- NAV ---- */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: var(--white);
+  border-bottom: 2px solid var(--black);
+  height: 56px;
+  display: flex;
+  align-items: center;
+}
+nav .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.nav-logo {
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: -0.04em;
+  color: var(--black);
+  text-decoration: none;
+}
+.nav-logo span { color: var(--pink); }
+.nav-links { display: flex; gap: 28px; align-items: center; }
+.nav-links a {
+  font-family: var(--mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  color: var(--black);
+  transition: color 0.15s;
+}
+.nav-links a:hover { color: var(--pink); }
+.nav-cta {
+  background: var(--pink) !important;
+  color: var(--white) !important;
+  padding: 8px 20px;
+  font-weight: 700;
+  border: 2px solid var(--black);
+}
+.nav-cta:hover { background: var(--black) !important; }
+
+/* ---- HERO ---- */
+.hero {
+  padding: 140px 0 80px;
+  border-bottom: 2px solid var(--black);
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+.hero h1 {
+  font-size: clamp(48px, 7vw, 96px);
+  margin-bottom: 24px;
+}
+.hero h1 .pink { color: var(--pink); }
+.hero-sub {
+  font-size: 18px;
+  line-height: 1.5;
+  max-width: 480px;
+  margin-bottom: 32px;
+  color: #333;
+}
+.hero-cta {
+  display: inline-block;
+  background: var(--pink);
+  color: var(--white);
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 16px 40px;
+  border: 2px solid var(--black);
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.hero-cta:hover { background: var(--black); }
+.hero-badge {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: #999;
+  margin-top: 16px;
+}
+
+/* Hero icon */
+.hero-icon-area {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+}
+.app-icon {
+  width: 240px;
+  height: 240px;
+  border: 2px solid var(--black);
+  display: block;
+}
+
+/* Menu bar mockup */
+.menubar-mock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 240px;
+  padding: 8px 16px;
+  background: var(--white);
+  border: 2px solid var(--black);
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--black);
+  font-family: -apple-system, "SF Pro Text", system-ui, sans-serif;
+  letter-spacing: 0;
+}
+.menubar-mock .mb-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.9;
+}
+.menubar-mock .mb-icon svg {
+  display: block;
+}
+.menubar-mock .mb-hlas {
+  opacity: 1;
+  position: relative;
+}
+.menubar-mock .mb-hlas::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: var(--pink);
+}
+.menubar-mock .mb-badge {
+  background: #eee;
+  padding: 1px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.menubar-mock .mb-time {
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* Menu bar callout arrow */
+.menubar-callout {
+  position: relative;
+}
+.menubar-arrow {
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  margin-right: 6px;
+}
+.menubar-arrow svg {
+  display: block;
+  width: 40px;
+  height: 16px;
+}
+.menubar-arrow-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pink);
+  white-space: nowrap;
+  margin-bottom: 2px;
+}
+.app-icon-small {
+  width: 80px;
+  height: 80px;
+  border: 2px solid var(--black);
+  display: block;
+}
+.app-icon-medium {
+  width: 120px;
+  height: 120px;
+  border: 2px solid var(--black);
+  display: block;
+}
+
+/* ---- STATEMENT (PINK) ---- */
+.statement {
+  padding: 80px 0;
+  border-bottom: 2px solid var(--white);
+}
+.statement h2 {
+  font-size: clamp(32px, 5vw, 64px);
+  max-width: 900px;
+  margin-bottom: 24px;
+}
+.statement p {
+  font-size: 18px;
+  line-height: 1.6;
+  max-width: 640px;
+  opacity: 0.9;
+}
+
+/* ---- HOTKEY (WHITE) ---- */
+.hotkey-section {
+  padding: 80px 0;
+  border-bottom: 2px solid var(--black);
+  text-align: center;
+}
+.hotkey-section h2 {
+  font-size: clamp(28px, 4vw, 48px);
+  margin-bottom: 48px;
+}
+.hotkey-keys {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.key-cap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 72px;
+  height: 64px;
+  padding: 0 20px;
+  border: 2px solid var(--black);
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--white);
+  color: var(--black);
+  position: relative;
+}
+.key-cap::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 2px;
+  right: -4px;
+  height: 4px;
+  background: var(--black);
+}
+.key-cap::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: -4px;
+  bottom: -4px;
+  width: 4px;
+  background: var(--black);
+}
+.key-plus {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--pink);
+}
+.hotkey-result {
+  margin-top: 48px;
+  font-family: var(--mono);
+  font-size: 14px;
+  color: #666;
+  letter-spacing: 0.05em;
+}
+.hotkey-result span {
+  color: var(--pink);
+  font-weight: 700;
+}
+
+/* ---- WINDOW MOCKUP (PINK) ---- */
+.window-section {
+  padding: 80px 0;
+  border-bottom: 2px solid var(--white);
+}
+.window-section h2 {
+  font-size: clamp(28px, 4vw, 48px);
+  margin-bottom: 48px;
+  text-align: center;
+}
+.window-frame {
+  max-width: 680px;
+  margin: 0 auto;
+  border: 2px solid var(--white);
+  background: #1a1a1a;
+}
+.window-chrome {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #f5f5f5;
+  border-bottom: 2px solid var(--white);
+}
+.traffic-dot {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #ccc;
+}
+.traffic-dot--red { background: #FF5F57; border-color: #E0443E; }
+.traffic-dot--yellow { background: #FEBC2E; border-color: #DEA123; }
+.traffic-dot--green { background: #28C840; border-color: #1AAB29; }
+.window-title {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #999;
+  margin-left: 8px;
+  letter-spacing: 0.05em;
+}
+.window-body { padding: 24px; }
+.window-menubar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: #2a2a2a;
+  margin-bottom: 16px;
+  border: 1px solid #333;
+}
+.menubar-icon {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+}
+.menubar-icon .mb {
+  width: 2px;
+  background: var(--pink);
+  animation: wave 1s ease-in-out infinite;
+}
+.menubar-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--pink);
+  letter-spacing: 0.05em;
+}
+.transcript-line {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #e0e0e0;
+  font-family: var(--sans);
+}
+.transcript-line .typed {
+  color: var(--white);
+  border-right: 2px solid var(--pink);
+  animation: blink 0.8s step-end infinite;
+}
+@keyframes blink {
+  0%, 100% { border-color: var(--pink); }
+  50% { border-color: transparent; }
+}
+.transcript-meta {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #333;
+}
+.meta-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #888;
+}
+.meta-tag span { color: var(--pink); }
+
+/* ---- FEATURES GRID (WHITE) ---- */
+.features-section {
+  padding: 80px 0;
+  border-bottom: 2px solid var(--black);
+}
+.features-section h2 {
+  font-size: clamp(28px, 4vw, 48px);
+  margin-bottom: 48px;
+}
+.feature-row {
+  display: grid;
+  grid-template-columns: 60px 1fr auto;
+  gap: 24px;
+  align-items: start;
+  padding: 24px 0;
+  border-top: 2px solid var(--black);
+}
+.feature-row:last-child { border-bottom: 2px solid var(--black); }
+.feature-num {
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--pink);
+}
+.feature-title {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.feature-desc {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}
+.feature-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border: 2px solid var(--pink);
+  color: var(--pink);
+  white-space: nowrap;
+  align-self: center;
+}
+
+/* ---- DUAL ENGINE (PINK) ---- */
+.engines-section {
+  padding: 80px 0;
+  border-bottom: 2px solid var(--white);
+}
+.engines-section h2 {
+  font-size: clamp(28px, 4vw, 48px);
+  margin-bottom: 16px;
+  text-align: center;
+}
+.engines-sub {
+  text-align: center;
+  font-size: 16px;
+  opacity: 0.85;
+  margin-bottom: 48px;
+}
+.engines-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.engine-panel {
+  border: 2px solid var(--white);
+  padding: 32px;
+}
+.engine-badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border: 2px solid var(--white);
+  display: inline-block;
+  margin-bottom: 16px;
+}
+.engine-panel h3 {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+.engine-panel p {
+  font-size: 14px;
+  line-height: 1.6;
+  opacity: 0.85;
+  margin-bottom: 16px;
+}
+.engine-specs {
+  list-style: none;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+}
+.engine-specs li {
+  padding: 6px 0;
+  border-top: 1px solid rgba(255,255,255,0.25);
+}
+.engine-specs li::before {
+  content: '>';
+  margin-right: 8px;
+  color: var(--white);
+  opacity: 0.5;
+}
+
+/* ---- LANGUAGES (WHITE) ---- */
+.languages-section {
+  padding: 80px 0;
+  border-bottom: 2px solid var(--black);
+}
+.languages-section h2 {
+  font-size: clamp(28px, 4vw, 48px);
+  margin-bottom: 8px;
+}
+.languages-count {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--pink);
+  letter-spacing: 0.1em;
+  margin-bottom: 40px;
+}
+.language-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.lang-tag {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  padding: 8px 16px;
+  border: 2px solid var(--black);
+  color: var(--black);
+  background: var(--white);
+  cursor: default;
+  transition: all 0.15s;
+}
+.lang-tag:hover {
+  background: var(--pink);
+  color: var(--white);
+  border-color: var(--pink);
+}
+
+/* ---- COMPATIBILITY (PINK) ---- */
+.compat-section {
+  padding: 80px 0;
+  border-bottom: 2px solid var(--white);
+}
+.compat-section h2 {
+  font-size: clamp(28px, 4vw, 48px);
+  margin-bottom: 8px;
+}
+.compat-sub {
+  font-size: 16px;
+  opacity: 0.85;
+  margin-bottom: 48px;
+}
+.compat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+}
+.compat-item {
+  border: 2px solid var(--white);
+  padding: 20px 16px;
+  text-align: center;
+}
+.compat-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+  display: block;
+}
+.compat-name {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ---- TECH SPECS (BLACK) ---- */
+.specs-section {
+  padding: 80px 0;
+  border-bottom: 2px solid #333;
+}
+.specs-section h2 {
+  font-size: clamp(28px, 4vw, 48px);
+  margin-bottom: 48px;
+}
+.specs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: #333;
+}
+.spec-cell {
+  background: var(--black);
+  padding: 24px;
+}
+.spec-val {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--pink);
+  margin-bottom: 4px;
+}
+.spec-key {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #888;
+}
+
+/* ---- SMART TEXT (WHITE) ---- */
+.smart-section {
+  padding: 80px 0;
+  border-bottom: 2px solid var(--black);
+}
+.smart-section h2 {
+  font-size: clamp(28px, 4vw, 48px);
+  margin-bottom: 48px;
+}
+.smart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.smart-card {
+  border: 2px solid var(--black);
+  padding: 28px;
+}
+.smart-card h3 {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+.smart-before, .smart-after {
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.6;
+  padding: 12px;
+  margin-top: 12px;
+}
+.smart-before {
+  background: #f5f5f5;
+  color: #999;
+  text-decoration: line-through;
+  border: 2px solid #e0e0e0;
+}
+.smart-after {
+  background: var(--white);
+  color: var(--black);
+  border: 2px solid var(--pink);
+}
+
+/* ---- DOWNLOAD CTA (WHITE) ---- */
+.download-section {
+  padding: 100px 0;
+  text-align: center;
+  border-bottom: 2px solid var(--black);
+}
+.download-section h2 {
+  font-size: clamp(36px, 5vw, 72px);
+  margin-bottom: 16px;
+}
+.download-section h2 .pink { color: var(--pink); }
+.download-sub {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 40px;
+}
+.download-btn {
+  display: inline-block;
+  background: var(--pink);
+  color: var(--white);
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 20px 56px;
+  border: 2px solid var(--black);
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.download-btn:hover { background: var(--black); }
+.download-meta {
+  margin-top: 20px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #999;
+  letter-spacing: 0.05em;
+}
+
+/* ---- FOOTER ---- */
+footer {
+  padding: 32px 0;
+  background: var(--black);
+  color: #888;
+}
+footer .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-brand {
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--white);
+}
+.footer-brand span { color: var(--pink); }
+.footer-links {
+  display: flex;
+  gap: 24px;
+}
+.footer-links a {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #888;
+  transition: color 0.15s;
+}
+.footer-links a:hover { color: var(--pink); }
+.footer-copy {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #555;
+}
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 768px) {
+  .hero-grid { grid-template-columns: 1fr; text-align: center; }
+  .hero-sub { margin: 0 auto 32px; }
+  .hero-icon-area { order: -1; margin-bottom: 24px; }
+  .app-icon { width: 180px; height: 180px; }
+  .menubar-callout { display: none; }
+  .engines-grid { grid-template-columns: 1fr; }
+  .smart-grid { grid-template-columns: 1fr; }
+  .specs-grid { grid-template-columns: 1fr; }
+  .feature-row { grid-template-columns: 48px 1fr; }
+  .feature-tag { display: none; }
+  .nav-links a:not(.nav-cta) { display: none; }
+  footer .container { flex-direction: column; gap: 16px; text-align: center; }
+  .compat-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .hotkey-keys { gap: 8px; }
+  .key-cap { min-width: 56px; height: 52px; padding: 0 12px; font-size: 13px; }
+  .compat-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
 </head>
 <body>
-    <h1>Hlas Landing Pages</h1>
-    <p class="subtitle">4 brutalist concepts with showcase content</p>
-    <div class="grid">
-        <a href="v1/" class="card">
-            <div class="num">01</div>
-            <h2>Clean Brutalist + Showcase</h2>
-            <p>White background, hot pink accents, hard edges. macOS window mockup, dual engine panels, numbered feature grid, waveform dividers.</p>
-        </a>
-        <a href="v2/" class="card">
-            <div class="num">02</div>
-            <h2>Dark Brutalist + Cat Energy</h2>
-            <p>Black background with electric pink cutting through. Concert poster meets dev tool. Dark window mockups, cat ear silhouettes.</p>
-        </a>
-        <a href="v3/" class="card">
-            <div class="num">03</div>
-            <h2>Split Pink & White</h2>
-            <p>Alternating solid pink and white sections. Swiss punk poster aesthetic. Waveform bar dividers, bold color blocks, high contrast.</p>
-        </a>
-        <a href="v4/" class="card">
-            <div class="num">04</div>
-            <h2>Extreme Editorial</h2>
-            <p>Typography as architecture. Viewport-filling headlines, asymmetric layouts, scrolling ticker, full-width split engine view. Pentagram meets punk zine.</p>
-        </a>
+
+<!-- NAV -->
+<nav>
+  <div class="container">
+    <a href="#" class="nav-logo"><img src="icon.png" alt="Hlas" style="width:32px;height:32px;vertical-align:middle;margin-right:8px;border:none;">hlas<span>.</span></a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#engines">Engines</a>
+      <a href="#languages">Languages</a>
+      <a href="#download" class="nav-cta">Download</a>
     </div>
+  </div>
+</nav>
+
+<!-- HERO (WHITE) -->
+<section class="hero section-white">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <span class="label label--pink">macOS menu bar app</span>
+        <h1>Speak.<br><span class="pink">Text appears.</span></h1>
+        <p class="hero-sub">
+          Hlas lives in your menu bar. Press a hotkey, speak naturally, and your words appear wherever your cursor is. Local AI or cloud. 60+ languages. Zero friction.
+        </p>
+        <a href="#download" class="hero-cta">Download for macOS</a>
+        <p class="hero-badge">macOS 14+ Sonoma &middot; Apple Silicon</p>
+      </div>
+      <div class="hero-icon-area">
+        <div class="menubar-callout">
+          <div class="menubar-arrow">
+            <span class="menubar-arrow-label">Hlas lives here</span>
+            <svg viewBox="0 0 40 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 9 C8 7, 16 5, 24 7 C28 8, 32 8, 36 8" stroke="#E91E63" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+              <path d="M32 4 L37 8 L32 12" stroke="#E91E63" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            </svg>
+          </div>
+          <div class="menubar-mock">
+            <!-- Hlas mic icon (active) -->
+            <span class="mb-icon mb-hlas">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#000"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="19" x2="12" y2="23" stroke="#000" stroke-width="2" stroke-linecap="round"/></svg>
+            </span>
+            <!-- WiFi -->
+            <span class="mb-icon">
+              <svg width="16" height="14" viewBox="0 0 24 20" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"><path d="M2 5a18 18 0 0 1 20 0"/><path d="M5.5 9a12 12 0 0 1 13 0"/><path d="M9 13a6 6 0 0 1 6 0"/><circle cx="12" cy="17" r="1" fill="#000" stroke="none"/></svg>
+            </span>
+            <!-- Battery -->
+            <span class="mb-icon" style="gap:4px;display:inline-flex;align-items:center;">
+              <svg width="22" height="11" viewBox="0 0 22 11" fill="none"><rect x="0.5" y="0.5" width="18" height="10" rx="2" stroke="#000" stroke-width="1"/><rect x="2" y="2" width="15" height="7" rx="1" fill="#000"/><path d="M19.5 3.5v4a1.5 1.5 0 0 0 0-4z" fill="#999"/></svg>
+            </span>
+            <!-- Time -->
+            <span class="mb-time">Feb 22&ensp;16:20</span>
+          </div>
+        </div>
+        <img src="icon.png" alt="Hlas app icon — roaring cat with audio waveform" class="app-icon">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAVEFORM DIVIDER -->
+<div class="waveform-divider waveform-divider--pink" style="background:var(--pink);padding:20px 0;">
+  <span class="bar" style="height:8px;animation-delay:0s"></span>
+  <span class="bar" style="height:16px;animation-delay:0.08s"></span>
+  <span class="bar" style="height:24px;animation-delay:0.16s"></span>
+  <span class="bar" style="height:12px;animation-delay:0.24s"></span>
+  <span class="bar" style="height:28px;animation-delay:0.32s"></span>
+  <span class="bar" style="height:8px;animation-delay:0.4s"></span>
+  <span class="bar" style="height:20px;animation-delay:0.48s"></span>
+  <span class="bar" style="height:32px;animation-delay:0.56s"></span>
+  <span class="bar" style="height:14px;animation-delay:0.64s"></span>
+  <span class="bar" style="height:26px;animation-delay:0.72s"></span>
+  <span class="bar" style="height:10px;animation-delay:0.8s"></span>
+  <span class="bar" style="height:22px;animation-delay:0.88s"></span>
+  <span class="bar" style="height:6px;animation-delay:0.96s"></span>
+  <span class="bar" style="height:18px;animation-delay:1.04s"></span>
+  <span class="bar" style="height:30px;animation-delay:1.12s"></span>
+</div>
+
+<!-- STATEMENT (PINK) -->
+<section class="statement section-pink">
+  <div class="container">
+    <span class="label label--white">// why hlas</span>
+    <h2>"Hlas" means voice in Czech. We built the voice input macOS deserves.</h2>
+    <p>
+      No app to switch to. No window to manage. Hlas sits silently in your menu bar until you need it. One hotkey activates dictation. Your words flow directly into whatever app you are using -- browser, IDE, notes, Slack, anywhere.
+    </p>
+  </div>
+</section>
+
+<!-- HOTKEY VISUALIZATION (WHITE) -->
+<section class="hotkey-section section-white" id="hotkey">
+  <div class="container">
+    <span class="label label--pink">// activation</span>
+    <h2>One hotkey. Instant dictation.</h2>
+    <div class="hotkey-keys">
+      <div class="key-cap">&#8984; Cmd</div>
+      <span class="key-plus">+</span>
+      <div class="key-cap">&#8679; Shift</div>
+      <span class="key-plus">+</span>
+      <div class="key-cap">Space</div>
+    </div>
+    <p class="hotkey-result">
+      Press &rarr; Speak &rarr; <span>Text appears at your cursor</span> &rarr; Done.
+    </p>
+    <p style="font-family:var(--mono);font-size:12px;color:#999;margin-top:16px;letter-spacing:0.05em;">The hotkey is fully configurable in settings.</p>
+  </div>
+</section>
+
+<!-- WAVEFORM DIVIDER -->
+<div class="waveform-divider waveform-divider--white" style="background:var(--pink);padding:20px 0;">
+  <span class="bar" style="height:10px;animation-delay:0.1s"></span>
+  <span class="bar" style="height:22px;animation-delay:0.2s"></span>
+  <span class="bar" style="height:6px;animation-delay:0.3s"></span>
+  <span class="bar" style="height:28px;animation-delay:0.4s"></span>
+  <span class="bar" style="height:14px;animation-delay:0.5s"></span>
+  <span class="bar" style="height:32px;animation-delay:0.6s"></span>
+  <span class="bar" style="height:8px;animation-delay:0.7s"></span>
+  <span class="bar" style="height:20px;animation-delay:0.8s"></span>
+  <span class="bar" style="height:26px;animation-delay:0.9s"></span>
+  <span class="bar" style="height:12px;animation-delay:1.0s"></span>
+  <span class="bar" style="height:18px;animation-delay:1.1s"></span>
+</div>
+
+<!-- WINDOW MOCKUP (PINK) -->
+<section class="window-section section-pink">
+  <div class="container">
+    <span class="label label--white">// live preview</span>
+    <h2>See it in action</h2>
+    <div class="window-frame">
+      <div class="window-chrome">
+        <div class="traffic-dot traffic-dot--red"></div>
+        <div class="traffic-dot traffic-dot--yellow"></div>
+        <div class="traffic-dot traffic-dot--green"></div>
+        <span class="window-title">hlas &mdash; recording</span>
+      </div>
+      <div class="window-body">
+        <div class="window-menubar">
+          <div class="menubar-icon">
+            <span class="mb" style="height:4px;animation-delay:0s"></span>
+            <span class="mb" style="height:10px;animation-delay:0.15s"></span>
+            <span class="mb" style="height:14px;animation-delay:0.3s"></span>
+            <span class="mb" style="height:8px;animation-delay:0.45s"></span>
+            <span class="mb" style="height:12px;animation-delay:0.6s"></span>
+          </div>
+          <span class="menubar-label">Recording...</span>
+        </div>
+        <div class="transcript-line">
+          <span class="typed" id="typed-text"></span>
+        </div>
+        <div class="transcript-meta">
+          <span class="meta-tag">Engine: <span>Local</span></span>
+          <span class="meta-tag">Lang: <span>EN-US</span></span>
+          <span class="meta-tag">Model: <span>WhisperKit Large-v3</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES GRID (WHITE) -->
+<section class="features-section section-white" id="features">
+  <div class="container">
+    <span class="label label--pink">// features</span>
+    <h2>Everything voice input needs</h2>
+    <div>
+      <div class="feature-row">
+        <span class="feature-num">01</span>
+        <div>
+          <p class="feature-title">Menu Bar Native</p>
+          <p class="feature-desc">Lives in your menu bar. No dock icon, no windows to manage. Always one hotkey away. Real-time audio level visualization shows recording state at a glance.</p>
+        </div>
+        <span class="feature-tag">Core</span>
+      </div>
+      <div class="feature-row">
+        <span class="feature-num">02</span>
+        <div>
+          <p class="feature-title">Dual Transcription Engine</p>
+          <p class="feature-desc">Choose local on-device AI via WhisperKit or remote GPU server. Switch freely based on your needs -- privacy, speed, or model size.</p>
+        </div>
+        <span class="feature-tag">Engine</span>
+      </div>
+      <div class="feature-row">
+        <span class="feature-num">03</span>
+        <div>
+          <p class="feature-title">60+ Languages</p>
+          <p class="feature-desc">Automatic language detection powered by Whisper AI models. Speak in any language -- Hlas figures out the rest. No manual switching needed.</p>
+        </div>
+        <span class="feature-tag">Languages</span>
+      </div>
+      <div class="feature-row">
+        <span class="feature-num">04</span>
+        <div>
+          <p class="feature-title">Smart Text Processing</p>
+          <p class="feature-desc">Automatic filler word removal (um, uh, like), smart punctuation insertion, and a personal dictionary for names and technical terms.</p>
+        </div>
+        <span class="feature-tag">Text</span>
+      </div>
+      <div class="feature-row">
+        <span class="feature-num">05</span>
+        <div>
+          <p class="feature-title">Built-in Translation</p>
+          <p class="feature-desc">Speak in one language, get text in another. Powered by Apple Translation Framework and Whisper's built-in translation capabilities.</p>
+        </div>
+        <span class="feature-tag">Translate</span>
+      </div>
+      <div class="feature-row">
+        <span class="feature-num">06</span>
+        <div>
+          <p class="feature-title">Works Everywhere</p>
+          <p class="feature-desc">Text is inserted wherever your cursor is. Browsers, IDEs, notes apps, Slack, email -- any text field in any application.</p>
+        </div>
+        <span class="feature-tag">Universal</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAVEFORM DIVIDER -->
+<div class="waveform-divider waveform-divider--white" style="background:var(--pink);padding:20px 0;">
+  <span class="bar" style="height:14px;animation-delay:0s"></span>
+  <span class="bar" style="height:6px;animation-delay:0.1s"></span>
+  <span class="bar" style="height:26px;animation-delay:0.2s"></span>
+  <span class="bar" style="height:18px;animation-delay:0.3s"></span>
+  <span class="bar" style="height:10px;animation-delay:0.4s"></span>
+  <span class="bar" style="height:30px;animation-delay:0.5s"></span>
+  <span class="bar" style="height:8px;animation-delay:0.6s"></span>
+  <span class="bar" style="height:22px;animation-delay:0.7s"></span>
+  <span class="bar" style="height:16px;animation-delay:0.8s"></span>
+  <span class="bar" style="height:28px;animation-delay:0.9s"></span>
+  <span class="bar" style="height:12px;animation-delay:1.0s"></span>
+  <span class="bar" style="height:20px;animation-delay:1.1s"></span>
+  <span class="bar" style="height:4px;animation-delay:1.15s"></span>
+</div>
+
+<!-- DUAL ENGINE (PINK) -->
+<section class="engines-section section-pink" id="engines">
+  <div class="container">
+    <span class="label label--white">// transcription engines</span>
+    <h2>Two engines. Your choice.</h2>
+    <p class="engines-sub">Privacy-first local processing or lightning-fast cloud. Switch anytime.</p>
+    <div class="engines-grid">
+      <div class="engine-panel">
+        <span class="engine-badge">Local</span>
+        <h3>On-Device AI</h3>
+        <p>Runs entirely on your Mac using WhisperKit. Your audio never leaves the machine. Complete privacy, zero latency dependency.</p>
+        <ul class="engine-specs">
+          <li>WhisperKit / Whisper models</li>
+          <li>Apple Neural Engine optimized</li>
+          <li>No internet required</li>
+          <li>100% private -- audio stays local</li>
+          <li>Multiple model sizes available</li>
+        </ul>
+      </div>
+      <div class="engine-panel">
+        <span class="engine-badge">Remote</span>
+        <h3>GPU Server</h3>
+        <p>Offload to a remote GPU for maximum accuracy on longer dictations. Ideal when you want the largest models without local compute cost.</p>
+        <ul class="engine-specs">
+          <li>Remote GPU acceleration</li>
+          <li>Largest model support</li>
+          <li>Ideal for long-form dictation</li>
+          <li>Low-latency streaming</li>
+          <li>Automatic fallback to local</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LANGUAGES (WHITE) -->
+<section class="languages-section section-white" id="languages">
+  <div class="container">
+    <span class="label label--pink">// languages</span>
+    <h2>Speak your language</h2>
+    <p class="languages-count">60+ languages with automatic detection</p>
+    <div class="language-tags">
+      <span class="lang-tag">English</span>
+      <span class="lang-tag">Czech</span>
+      <span class="lang-tag">Czech</span>
+      <span class="lang-tag">German</span>
+      <span class="lang-tag">French</span>
+      <span class="lang-tag">Spanish</span>
+      <span class="lang-tag">Italian</span>
+      <span class="lang-tag">Portuguese</span>
+      <span class="lang-tag">Dutch</span>
+      <span class="lang-tag">Polish</span>
+      <span class="lang-tag">Russian</span>
+      <span class="lang-tag">Ukrainian</span>
+      <span class="lang-tag">Japanese</span>
+      <span class="lang-tag">Chinese</span>
+      <span class="lang-tag">Korean</span>
+      <span class="lang-tag">Arabic</span>
+      <span class="lang-tag">Hindi</span>
+      <span class="lang-tag">Turkish</span>
+      <span class="lang-tag">Vietnamese</span>
+      <span class="lang-tag">Thai</span>
+      <span class="lang-tag">Swedish</span>
+      <span class="lang-tag">Norwegian</span>
+      <span class="lang-tag">Danish</span>
+      <span class="lang-tag">Finnish</span>
+      <span class="lang-tag">Hungarian</span>
+      <span class="lang-tag">Romanian</span>
+      <span class="lang-tag">Bulgarian</span>
+      <span class="lang-tag">Croatian</span>
+      <span class="lang-tag">Greek</span>
+      <span class="lang-tag">Hebrew</span>
+      <span class="lang-tag">Indonesian</span>
+      <span class="lang-tag">Malay</span>
+      <span class="lang-tag">Catalan</span>
+      <span class="lang-tag">Welsh</span>
+      <span class="lang-tag">Swahili</span>
+      <span class="lang-tag">+ 25 more</span>
+    </div>
+  </div>
+</section>
+
+<!-- COMPATIBILITY (PINK) -->
+<section class="compat-section section-pink" id="compat">
+  <div class="container">
+    <span class="label label--white">// compatibility</span>
+    <h2>Works with every app</h2>
+    <p class="compat-sub">Text appears wherever your cursor is. No plugins, no integrations needed.</p>
+    <div class="compat-grid">
+      <div class="compat-item">
+        <span class="compat-icon">S</span>
+        <span class="compat-name">Safari</span>
+      </div>
+      <div class="compat-item">
+        <span class="compat-icon">C</span>
+        <span class="compat-name">Chrome</span>
+      </div>
+      <div class="compat-item">
+        <span class="compat-icon">VS</span>
+        <span class="compat-name">VS Code</span>
+      </div>
+      <div class="compat-item">
+        <span class="compat-icon">Xc</span>
+        <span class="compat-name">Xcode</span>
+      </div>
+      <div class="compat-item">
+        <span class="compat-icon">N</span>
+        <span class="compat-name">Notes</span>
+      </div>
+      <div class="compat-item">
+        <span class="compat-icon">Sl</span>
+        <span class="compat-name">Slack</span>
+      </div>
+      <div class="compat-item">
+        <span class="compat-icon">No</span>
+        <span class="compat-name">Notion</span>
+      </div>
+      <div class="compat-item">
+        <span class="compat-icon">M</span>
+        <span class="compat-name">Mail</span>
+      </div>
+      <div class="compat-item">
+        <span class="compat-icon">P</span>
+        <span class="compat-name">Pages</span>
+      </div>
+      <div class="compat-item">
+        <span class="compat-icon">T</span>
+        <span class="compat-name">Terminal</span>
+      </div>
+      <div class="compat-item">
+        <span class="compat-icon">Fi</span>
+        <span class="compat-name">Figma</span>
+      </div>
+      <div class="compat-item">
+        <span class="compat-icon">*</span>
+        <span class="compat-name">Any App</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH SPECS (BLACK) -->
+<section class="specs-section section-black">
+  <div class="container">
+    <span class="label label--pink">// technical</span>
+    <h2>Under the hood</h2>
+    <div class="specs-grid">
+      <div class="spec-cell">
+        <p class="spec-val">60+</p>
+        <p class="spec-key">Languages</p>
+      </div>
+      <div class="spec-cell">
+        <p class="spec-val">0ms</p>
+        <p class="spec-key">Local Latency</p>
+      </div>
+      <div class="spec-cell">
+        <p class="spec-val">2</p>
+        <p class="spec-key">Engines</p>
+      </div>
+      <div class="spec-cell">
+        <p class="spec-val">14+</p>
+        <p class="spec-key">macOS Version</p>
+      </div>
+      <div class="spec-cell">
+        <p class="spec-val">ANE</p>
+        <p class="spec-key">Neural Engine</p>
+      </div>
+      <div class="spec-cell">
+        <p class="spec-val">100%</p>
+        <p class="spec-key">Private (Local)</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SMART TEXT (WHITE) -->
+<section class="smart-section section-white">
+  <div class="container">
+    <span class="label label--pink">// text processing</span>
+    <h2>Raw speech. Clean text.</h2>
+    <div class="smart-grid">
+      <div class="smart-card">
+        <h3>Filler Word Removal</h3>
+        <div class="smart-before">um so like I was thinking uh that we should um probably like update the um design</div>
+        <div class="smart-after">I was thinking that we should probably update the design</div>
+      </div>
+      <div class="smart-card">
+        <h3>Smart Punctuation</h3>
+        <div class="smart-before">hey can you send me that file i need it by tomorrow also dont forget the meeting</div>
+        <div class="smart-after">Hey, can you send me that file? I need it by tomorrow. Also, don't forget the meeting.</div>
+      </div>
+      <div class="smart-card">
+        <h3>Personal Dictionary</h3>
+        <div class="smart-before">we need to update the hlaz app and push to ex code</div>
+        <div class="smart-after">We need to update the Hlas app and push to Xcode.</div>
+      </div>
+      <div class="smart-card">
+        <h3>Translation</h3>
+        <div class="smart-before" style="text-decoration:none;color:#666">[Speaking in Czech] "Potřebuji aktualizovat design"</div>
+        <div class="smart-after">I need to update the design</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAVEFORM DIVIDER -->
+<div class="waveform-divider waveform-divider--pink" style="background:var(--white);padding:20px 0;border-top:2px solid var(--black);">
+  <span class="bar" style="height:6px;animation-delay:0s"></span>
+  <span class="bar" style="height:20px;animation-delay:0.09s"></span>
+  <span class="bar" style="height:10px;animation-delay:0.18s"></span>
+  <span class="bar" style="height:28px;animation-delay:0.27s"></span>
+  <span class="bar" style="height:8px;animation-delay:0.36s"></span>
+  <span class="bar" style="height:24px;animation-delay:0.45s"></span>
+  <span class="bar" style="height:14px;animation-delay:0.54s"></span>
+  <span class="bar" style="height:32px;animation-delay:0.63s"></span>
+  <span class="bar" style="height:12px;animation-delay:0.72s"></span>
+  <span class="bar" style="height:18px;animation-delay:0.81s"></span>
+  <span class="bar" style="height:26px;animation-delay:0.9s"></span>
+</div>
+
+<!-- DOWNLOAD CTA (WHITE) -->
+<section class="download-section section-white" id="download">
+  <div class="container">
+    <img src="icon.png" alt="Hlas" class="app-icon-medium" style="margin:0 auto 24px;border:none;">
+    <span class="label label--pink">// get started</span>
+    <h2>Your voice.<br><span class="pink">Your text.</span></h2>
+    <p class="download-sub">Free to download. Start dictating in seconds.</p>
+    <a href="#" class="download-btn">Download Hlas</a>
+    <p class="download-meta">macOS 14+ Sonoma &middot; Apple Silicon &middot; ~150 MB</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <span class="footer-brand">hlas<span>.</span></span>
+    <div class="footer-links">
+      <a href="#features">Features</a>
+      <a href="#engines">Engines</a>
+      <a href="#languages">Languages</a>
+      <a href="mailto:davidbudac@gmail.com">Contact</a>
+    </div>
+    <span class="footer-copy">&copy; 2025 Hlas. All rights reserved.</span>
+  </div>
+</footer>
+
+<!-- MINIMAL JS: typing animation -->
+<script>
+(function() {
+  const text = "I've been thinking about the new feature we discussed yesterday. Let me draft a quick summary of the key points and send it to the team before the standup.";
+  const el = document.getElementById('typed-text');
+  let i = 0;
+  let started = false;
+
+  function type() {
+    if (i < text.length) {
+      el.textContent = text.substring(0, i + 1);
+      i++;
+      setTimeout(type, 28 + Math.random() * 32);
+    } else {
+      setTimeout(function() {
+        i = 0;
+        el.textContent = '';
+        setTimeout(type, 1200);
+      }, 4000);
+    }
+  }
+
+  // Start typing when the window mockup is visible
+  const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting && !started) {
+        started = true;
+        setTimeout(type, 600);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  observer.observe(el.closest('.window-section'));
+})();
+</script>
+
 </body>
 </html>
