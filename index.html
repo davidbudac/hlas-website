@@ -368,9 +368,14 @@ nav .container {
   margin-bottom: 48px;
   text-align: center;
 }
-.window-frame {
-  max-width: 680px;
+.window-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  max-width: 960px;
   margin: 0 auto;
+}
+.window-frame {
   border: 2px solid var(--white);
   background: #1a1a1a;
 }
@@ -795,6 +800,7 @@ footer .container {
   .hero-icon-area { order: -1; margin-bottom: 24px; }
   .app-icon { width: 180px; height: 180px; }
   .menubar-callout { display: none; }
+  .window-grid { grid-template-columns: 1fr; }
   .engines-grid { grid-template-columns: 1fr; }
   .smart-grid { grid-template-columns: 1fr; }
   .specs-grid { grid-template-columns: 1fr; }
@@ -941,31 +947,64 @@ footer .container {
   <div class="container">
     <span class="label label--white">// live preview</span>
     <h2>See it in action</h2>
-    <div class="window-frame">
-      <div class="window-chrome">
-        <div class="traffic-dot traffic-dot--red"></div>
-        <div class="traffic-dot traffic-dot--yellow"></div>
-        <div class="traffic-dot traffic-dot--green"></div>
-        <span class="window-title">hlas &mdash; recording</span>
-      </div>
-      <div class="window-body">
-        <div class="window-menubar">
-          <div class="menubar-icon">
-            <span class="mb" style="height:4px;animation-delay:0s"></span>
-            <span class="mb" style="height:10px;animation-delay:0.15s"></span>
-            <span class="mb" style="height:14px;animation-delay:0.3s"></span>
-            <span class="mb" style="height:8px;animation-delay:0.45s"></span>
-            <span class="mb" style="height:12px;animation-delay:0.6s"></span>
+    <div class="window-grid">
+      <div class="window-frame">
+        <div class="window-chrome">
+          <div class="traffic-dot traffic-dot--red"></div>
+          <div class="traffic-dot traffic-dot--yellow"></div>
+          <div class="traffic-dot traffic-dot--green"></div>
+          <span class="window-title">hlas &mdash; dictation</span>
+        </div>
+        <div class="window-body">
+          <div class="window-menubar">
+            <div class="menubar-icon">
+              <span class="mb" style="height:4px;animation-delay:0s"></span>
+              <span class="mb" style="height:10px;animation-delay:0.15s"></span>
+              <span class="mb" style="height:14px;animation-delay:0.3s"></span>
+              <span class="mb" style="height:8px;animation-delay:0.45s"></span>
+              <span class="mb" style="height:12px;animation-delay:0.6s"></span>
+            </div>
+            <span class="menubar-label">Recording...</span>
           </div>
-          <span class="menubar-label">Recording...</span>
+          <div class="transcript-line">
+            <span class="typed" id="typed-text"></span>
+          </div>
+          <div class="transcript-meta">
+            <span class="meta-tag">Engine: <span>Local</span></span>
+            <span class="meta-tag">Lang: <span>EN-US</span></span>
+            <span class="meta-tag">Model: <span>WhisperKit Large-v3</span></span>
+          </div>
         </div>
-        <div class="transcript-line">
-          <span class="typed" id="typed-text"></span>
+      </div>
+      <div class="window-frame">
+        <div class="window-chrome">
+          <div class="traffic-dot traffic-dot--red"></div>
+          <div class="traffic-dot traffic-dot--yellow"></div>
+          <div class="traffic-dot traffic-dot--green"></div>
+          <span class="window-title">hlas &mdash; translation</span>
         </div>
-        <div class="transcript-meta">
-          <span class="meta-tag">Engine: <span>Local</span></span>
-          <span class="meta-tag">Lang: <span>EN-US</span></span>
-          <span class="meta-tag">Model: <span>WhisperKit Large-v3</span></span>
+        <div class="window-body">
+          <div class="window-menubar">
+            <div class="menubar-icon">
+              <span class="mb" style="height:6px;animation-delay:0.1s"></span>
+              <span class="mb" style="height:12px;animation-delay:0.25s"></span>
+              <span class="mb" style="height:8px;animation-delay:0.4s"></span>
+              <span class="mb" style="height:14px;animation-delay:0.55s"></span>
+              <span class="mb" style="height:10px;animation-delay:0.7s"></span>
+            </div>
+            <span class="menubar-label">Translating...</span>
+          </div>
+          <div class="transcript-line" style="color:#888;font-style:italic;margin-bottom:12px;">
+            <span id="typed-source"></span>
+          </div>
+          <div class="transcript-line">
+            <span class="typed" id="typed-translation"></span>
+          </div>
+          <div class="transcript-meta">
+            <span class="meta-tag">Engine: <span>Local</span></span>
+            <span class="meta-tag">Lang: <span>CS &rarr; EN</span></span>
+            <span class="meta-tag">Mode: <span>Translation</span></span>
+          </div>
         </div>
       </div>
     </div>
@@ -1293,39 +1332,73 @@ footer .container {
   </div>
 </footer>
 
-<!-- MINIMAL JS: typing animation -->
+<!-- MINIMAL JS: typing animations -->
 <script>
 (function() {
-  const text = "I've been thinking about the new feature we discussed yesterday. Let me draft a quick summary of the key points and send it to the team before the standup.";
-  const el = document.getElementById('typed-text');
-  let i = 0;
-  let started = false;
+  // Dictation typing
+  var dictText = "I've been thinking about the new feature we discussed yesterday. Let me draft a quick summary of the key points and send it to the team before the standup.";
+  var dictEl = document.getElementById('typed-text');
+  var di = 0;
+  var dictStarted = false;
 
-  function type() {
-    if (i < text.length) {
-      el.textContent = text.substring(0, i + 1);
-      i++;
-      setTimeout(type, 28 + Math.random() * 32);
+  function typeDictation() {
+    if (di < dictText.length) {
+      dictEl.textContent = dictText.substring(0, di + 1);
+      di++;
+      setTimeout(typeDictation, 28 + Math.random() * 32);
     } else {
       setTimeout(function() {
-        i = 0;
-        el.textContent = '';
-        setTimeout(type, 1200);
+        di = 0;
+        dictEl.textContent = '';
+        setTimeout(typeDictation, 1200);
       }, 4000);
     }
   }
 
-  // Start typing when the window mockup is visible
-  const observer = new IntersectionObserver(function(entries) {
+  // Translation typing
+  var sourceText = "Potřebuji aktualizovat design a poslat ho týmu před schůzkou. Taky bych rád přidal novou funkci, o které jsme mluvili.";
+  var transText = "I need to update the design and send it to the team before the meeting. I would also like to add the new feature we discussed.";
+  var srcEl = document.getElementById('typed-source');
+  var transEl = document.getElementById('typed-translation');
+  var si = 0, ti = 0;
+  var transStarted = false;
+
+  function typeSource() {
+    if (si < sourceText.length) {
+      srcEl.textContent = sourceText.substring(0, si + 1);
+      si++;
+      setTimeout(typeSource, 24 + Math.random() * 28);
+    } else {
+      setTimeout(typeTranslation, 600);
+    }
+  }
+
+  function typeTranslation() {
+    if (ti < transText.length) {
+      transEl.textContent = transText.substring(0, ti + 1);
+      ti++;
+      setTimeout(typeTranslation, 24 + Math.random() * 28);
+    } else {
+      setTimeout(function() {
+        si = 0; ti = 0;
+        srcEl.textContent = '';
+        transEl.textContent = '';
+        setTimeout(typeSource, 1200);
+      }, 4000);
+    }
+  }
+
+  // Start both when visible
+  var observer = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
-      if (entry.isIntersecting && !started) {
-        started = true;
-        setTimeout(type, 600);
+      if (entry.isIntersecting) {
+        if (!dictStarted) { dictStarted = true; setTimeout(typeDictation, 600); }
+        if (!transStarted) { transStarted = true; setTimeout(typeSource, 600); }
       }
     });
   }, { threshold: 0.3 });
 
-  observer.observe(el.closest('.window-section'));
+  observer.observe(document.querySelector('.window-section'));
 })();
 </script>
 
