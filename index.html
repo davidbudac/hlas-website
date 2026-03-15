@@ -755,6 +755,39 @@ nav .container {
   color: #999;
   letter-spacing: 0.05em;
 }
+.download-tip {
+  margin-top: 32px;
+  padding: 16px 24px;
+  border: 2px solid var(--black);
+  display: inline-block;
+  text-align: left;
+  max-width: 600px;
+}
+.download-tip-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--pink);
+  margin-bottom: 8px;
+}
+.download-tip-text {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+.download-tip-code {
+  font-family: var(--mono);
+  font-size: 12px;
+  background: var(--black);
+  color: #0f0;
+  padding: 10px 16px;
+  display: block;
+  letter-spacing: 0.02em;
+  overflow-x: auto;
+  white-space: nowrap;
+}
 
 /* ---- FOOTER ---- */
 footer {
@@ -901,7 +934,7 @@ footer .container {
 <section class="statement section-pink">
   <div class="container">
     <span class="label label--white">// why hlas</span>
-    <h2>"Hlas" means voice in Czech. We built the voice input macOS deserves.</h2>
+    <h2>"Hlas" means voice in Czech. This is the voice input macOS deserves.</h2>
     <p>
       No app to switch to. No window to manage. Hlas sits silently in your menu bar until you need it. One hotkey activates dictation. Your words flow directly into whatever app you are using -- browser, IDE, notes, Slack, anywhere.
     </p>
@@ -1315,6 +1348,11 @@ footer .container {
     <p class="download-sub">Free to download. Start dictating in seconds.</p>
     <a href="https://github.com/davidbudac/hlas-releases/releases/latest/download/Hlas.dmg" class="download-btn">Download Hlas</a>
     <p class="download-meta">macOS 14+ Sonoma &middot; Apple Silicon &middot; ~150 MB</p>
+    <div class="download-tip">
+      <p class="download-tip-label">// tip</p>
+      <p class="download-tip-text">macOS may show &ldquo;App Damaged&rdquo; or &ldquo;Could not verify safe.&rdquo; Run this after install to fix it:</p>
+      <code class="download-tip-code">xattr -rd com.apple.quarantine /Applications/Hlas.app</code>
+    </div>
   </div>
 </section>
 
