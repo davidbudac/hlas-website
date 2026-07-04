@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hlas — Voice to Text for macOS</title>
-<meta name="description" content="Hlas is a macOS menu bar dictation app. Press a hotkey, speak, text appears. Local AI or cloud. 60+ languages.">
+<meta name="description" content="Hlas is a macOS menu bar dictation app with local WhisperKit, native Parakeet v3, and an optional self-hosted Parakeet server. Press a hotkey, speak, text appears.">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -46,6 +46,31 @@ body {
 .label--pink { color: var(--pink); }
 
 h1, h2, h3 { font-weight: 800; line-height: 1.05; letter-spacing: -0.03em; }
+h1, h2, h3 { text-wrap: balance; }
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 1000;
+  transform: translateY(-160%);
+  background: var(--black);
+  color: var(--white);
+  padding: 10px 14px;
+  font-family: var(--mono);
+  font-size: 12px;
+  text-decoration: none;
+}
+.skip-link:focus { transform: translateY(0); }
+:where(a, button):focus-visible {
+  outline: 3px solid var(--black);
+  outline-offset: 3px;
+}
+.section-black :where(a, button):focus-visible,
+.section-pink :where(a, button):focus-visible,
+footer :where(a, button):focus-visible {
+  outline-color: var(--white);
+}
 
 /* ---- WAVEFORM DIVIDER ---- */
 .waveform-divider {
@@ -524,7 +549,7 @@ nav .container {
 }
 .engines-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
 }
 .engine-panel {
@@ -542,7 +567,7 @@ nav .container {
   margin-bottom: 16px;
 }
 .engine-panel h3 {
-  font-size: 28px;
+  font-size: 26px;
   margin-bottom: 12px;
 }
 .engine-panel p {
@@ -761,6 +786,7 @@ nav .container {
   border: 2px solid var(--black);
   display: inline-block;
   text-align: left;
+  width: min(100%, 600px);
   max-width: 600px;
 }
 .download-tip-label {
@@ -844,6 +870,15 @@ footer .container {
   .compat-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 @media (max-width: 480px) {
   .hotkey-keys { gap: 8px; }
   .key-cap { min-width: 56px; height: 52px; padding: 0 12px; font-size: 13px; }
@@ -853,10 +888,13 @@ footer .container {
 </head>
 <body>
 
+<a href="#content" class="skip-link">Skip to content</a>
+
 <!-- NAV -->
-<nav>
+<header>
+<nav aria-label="Primary">
   <div class="container">
-    <a href="#" class="nav-logo"><img src="icon.png" alt="Hlas" style="width:32px;height:32px;vertical-align:middle;margin-right:8px;border:none;">hlas<span>.</span></a>
+    <a href="#" class="nav-logo"><img src="icon.png" alt="" width="32" height="32" style="vertical-align:middle;margin-right:8px;border:none;">hlas<span>.</span></a>
     <div class="nav-links">
       <a href="#features">Features</a>
       <a href="#engines">Engines</a>
@@ -865,6 +903,9 @@ footer .container {
     </div>
   </div>
 </nav>
+</header>
+
+<main id="content" tabindex="-1">
 
 <!-- HERO (WHITE) -->
 <section class="hero section-white">
@@ -874,7 +915,7 @@ footer .container {
         <span class="label label--pink">macOS menu bar app</span>
         <h1>Speak.<br><span class="pink">Text appears.</span></h1>
         <p class="hero-sub">
-          Hlas lives in your menu bar. Press a hotkey, speak naturally, and your words appear wherever your cursor is. Speak in one language, get text in another. Fully local AI, no cloud, nothing leaves your Mac. 60+ languages. Zero friction.
+          Hlas lives in your menu bar. Press a hotkey, speak naturally, and your words appear wherever your cursor is. Run WhisperKit or Parakeet v3 entirely on your Mac, with your own remote Parakeet server available when you want to offload the work.
         </p>
         <a href="https://github.com/davidbudac/hlas-releases/releases/latest/download/Hlas.dmg" class="hero-cta">Download for macOS</a>
         <p class="hero-badge">macOS 14+ Sonoma &middot; Apple Silicon</p>
@@ -905,7 +946,7 @@ footer .container {
             <span class="mb-time">Feb 22&ensp;16:20</span>
           </div>
         </div>
-        <img src="icon.png" alt="Hlas app icon — roaring cat with audio waveform" class="app-icon">
+        <img src="icon.png" alt="Hlas app icon — roaring cat with audio waveform" class="app-icon" width="240" height="240" fetchpriority="high">
       </div>
     </div>
   </div>
@@ -1004,8 +1045,8 @@ footer .container {
           </div>
           <div class="transcript-meta">
             <span class="meta-tag">Engine: <span>Local</span></span>
-            <span class="meta-tag">Lang: <span>EN-US</span></span>
-            <span class="meta-tag">Model: <span>WhisperKit Large-v3</span></span>
+            <span class="meta-tag">Lang: <span>Auto</span></span>
+            <span class="meta-tag">Model: <span>Parakeet v3</span></span>
           </div>
         </div>
       </div>
@@ -1034,9 +1075,9 @@ footer .container {
             <span class="typed" id="typed-translation"></span>
           </div>
           <div class="transcript-meta">
-            <span class="meta-tag">Engine: <span>Local</span></span>
+            <span class="meta-tag">Engine: <span>On-device</span></span>
             <span class="meta-tag">Lang: <span>DE &rarr; EN</span></span>
-            <span class="meta-tag">Mode: <span>Translation</span></span>
+            <span class="meta-tag">Mode: <span>Apple Translation</span></span>
           </div>
         </div>
       </div>
@@ -1061,8 +1102,8 @@ footer .container {
       <div class="feature-row">
         <span class="feature-num">02</span>
         <div>
-          <p class="feature-title">Dual Transcription Engine</p>
-          <p class="feature-desc">Choose local on-device AI via WhisperKit or remote GPU server. Switch freely based on your needs -- privacy, speed, or model size.</p>
+          <p class="feature-title">Three Transcription Paths</p>
+          <p class="feature-desc">Choose local WhisperKit, native Parakeet v3 on the Apple Neural Engine, or your own remote Parakeet server. Switch when your workflow changes.</p>
         </div>
         <span class="feature-tag">Engine</span>
       </div>
@@ -1070,7 +1111,7 @@ footer .container {
         <span class="feature-num">03</span>
         <div>
           <p class="feature-title">60+ Languages</p>
-          <p class="feature-desc">Automatic language detection powered by Whisper AI models. Speak in any language -- Hlas figures out the rest. No manual switching needed.</p>
+          <p class="feature-desc">WhisperKit covers 60+ languages. Parakeet v3 automatically recognizes 25 European languages with no manual model switching.</p>
         </div>
         <span class="feature-tag">Languages</span>
       </div>
@@ -1086,7 +1127,7 @@ footer .container {
         <span class="feature-num">05</span>
         <div>
           <p class="feature-title">Built-in Translation</p>
-          <p class="feature-desc">Speak in one language, get text in another. Powered by Apple Translation Framework and Whisper's built-in translation capabilities.</p>
+          <p class="feature-desc">Speak in one language, get text in another. Use Whisper's English translation or Apple Translation with either local engine on macOS 15+.</p>
         </div>
         <span class="feature-tag">Translate</span>
       </div>
@@ -1119,35 +1160,47 @@ footer .container {
   <span class="bar" style="height:4px;animation-delay:1.15s"></span>
 </div>
 
-<!-- DUAL ENGINE (PINK) -->
+<!-- TRANSCRIPTION ENGINES (PINK) -->
 <section class="engines-section section-pink" id="engines">
   <div class="container">
     <span class="label label--white">// transcription engines</span>
-    <h2>Two engines. Your choice.</h2>
-    <p class="engines-sub">Privacy-first local processing or lightning-fast cloud. Switch anytime.</p>
+    <h2>Three paths. Your choice.</h2>
+    <p class="engines-sub">Two run entirely on your Mac. One connects to infrastructure you control.</p>
     <div class="engines-grid">
       <div class="engine-panel">
-        <span class="engine-badge">Local</span>
-        <h3>On-Device AI</h3>
-        <p>Runs entirely on your Mac using WhisperKit. Your audio never leaves the machine. Complete privacy, zero latency dependency.</p>
+        <span class="engine-badge">Local / Flexible</span>
+        <h3>WhisperKit</h3>
+        <p>Choose from several Whisper model sizes and run transcription entirely on your Mac. Best when broad language coverage and built-in English translation matter.</p>
         <ul class="engine-specs">
-          <li>WhisperKit / Whisper models</li>
-          <li>Apple Neural Engine optimized</li>
-          <li>No internet required</li>
-          <li>100% private -- audio stays local</li>
-          <li>Multiple model sizes available</li>
+          <li>60+ supported languages</li>
+          <li>Multiple model sizes</li>
+          <li>Whisper English translation</li>
+          <li>Runs fully on-device</li>
+          <li>Audio stays on your Mac</li>
         </ul>
       </div>
       <div class="engine-panel">
-        <span class="engine-badge">Remote</span>
-        <h3>Your Server with NVidia GPU</h3>
-        <p>Offload to a remote GPU running NVidia Parakeet model for maximum accuracy on longer dictations. Ideal when you want the largest models without local compute cost.</p>
+        <span class="engine-badge">Local / Fast</span>
+        <h3>Parakeet v3</h3>
+        <p>Run NVIDIA Parakeet TDT 0.6B v3 natively through FluidAudio and CoreML. The model is optimized for Apple Silicon and cached after the first download.</p>
         <ul class="engine-specs">
-          <li>Remote GPU acceleration</li>
-          <li>Largest model support</li>
-          <li>Ideal for long-form dictation</li>
-          <li>Low-latency streaming</li>
-          <li>Automatic fallback to local</li>
+          <li>25 European languages</li>
+          <li>Automatic language detection</li>
+          <li>Apple Neural Engine inference</li>
+          <li>Works offline after download</li>
+          <li>Audio stays on your Mac</li>
+        </ul>
+      </div>
+      <div class="engine-panel">
+        <span class="engine-badge">Self-hosted</span>
+        <h3>Remote Parakeet</h3>
+        <p>Point Hlas at your own Parakeet server and move transcription off the Mac. It is the same simple workflow, backed by an NVIDIA GPU you operate.</p>
+        <ul class="engine-specs">
+          <li>Parakeet TDT 0.6B v3</li>
+          <li>NVIDIA / CUDA acceleration</li>
+          <li>Server address you control</li>
+          <li>No local model load</li>
+          <li>WhisperKit fallback for meetings</li>
         </ul>
       </div>
     </div>
@@ -1159,10 +1212,9 @@ footer .container {
   <div class="container">
     <span class="label label--pink">// languages</span>
     <h2>Speak your language</h2>
-    <p class="languages-count">60+ languages with automatic detection</p>
+    <p class="languages-count">60+ with WhisperKit &middot; 25 European languages with Parakeet v3</p>
     <div class="language-tags">
       <span class="lang-tag">English</span>
-      <span class="lang-tag">Czech</span>
       <span class="lang-tag">Czech</span>
       <span class="lang-tag">German</span>
       <span class="lang-tag">French</span>
@@ -1271,12 +1323,12 @@ footer .container {
         <p class="spec-key">Languages</p>
       </div>
       <div class="spec-cell">
-        <p class="spec-val">0ms</p>
-        <p class="spec-key">Local Latency</p>
+        <p class="spec-val">LOCAL</p>
+        <p class="spec-key">Offline Capable</p>
       </div>
       <div class="spec-cell">
-        <p class="spec-val">2</p>
-        <p class="spec-key">Engines</p>
+        <p class="spec-val">3</p>
+        <p class="spec-key">Transcription Paths</p>
       </div>
       <div class="spec-cell">
         <p class="spec-val">14+</p>
@@ -1342,12 +1394,12 @@ footer .container {
 <!-- DOWNLOAD CTA (WHITE) -->
 <section class="download-section section-white" id="download">
   <div class="container">
-    <img src="icon.png" alt="Hlas" class="app-icon-medium" style="margin:0 auto 24px;border:none;">
+    <img src="icon.png" alt="Hlas" class="app-icon-medium" width="120" height="120" loading="lazy" style="margin:0 auto 24px;border:none;">
     <span class="label label--pink">// get started</span>
     <h2>Your voice.<br><span class="pink">Your text.</span></h2>
     <p class="download-sub">Free to download. Start dictating in seconds.</p>
     <a href="https://github.com/davidbudac/hlas-releases/releases/latest/download/Hlas.dmg" class="download-btn">Download Hlas</a>
-    <p class="download-meta">macOS 14+ Sonoma &middot; Apple Silicon &middot; ~150 MB</p>
+    <p class="download-meta">macOS 14+ Sonoma &middot; Apple Silicon &middot; Models download on demand</p>
     <div class="download-tip">
       <p class="download-tip-label">// tip</p>
       <p class="download-tip-text">macOS may show &ldquo;App Damaged&rdquo; or &ldquo;Could not verify safe.&rdquo; Run this after install to fix it:</p>
@@ -1355,6 +1407,8 @@ footer .container {
     </div>
   </div>
 </section>
+
+</main>
 
 <!-- FOOTER -->
 <footer>
@@ -1366,7 +1420,7 @@ footer .container {
       <a href="#languages">Languages</a>
       <a href="mailto:davidbudac@gmail.com">Contact</a>
     </div>
-    <span class="footer-copy">&copy; 2025 Hlas. All rights reserved.</span>
+    <span class="footer-copy">&copy; 2026 Hlas. All rights reserved.</span>
   </div>
 </footer>
 
@@ -1400,6 +1454,13 @@ footer .container {
   var transEl = document.getElementById('typed-translation');
   var si = 0, ti = 0;
   var transStarted = false;
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    dictEl.textContent = dictText;
+    srcEl.textContent = sourceText;
+    transEl.textContent = transText;
+    return;
+  }
 
   function typeSource() {
     if (si < sourceText.length) {
