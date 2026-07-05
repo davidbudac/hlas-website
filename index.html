@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hlas — Voice to Text for macOS</title>
-<meta name="description" content="Hlas is a macOS menu bar dictation app with local WhisperKit, native Parakeet v3, and an optional self-hosted Parakeet server. Press a hotkey, speak, text appears.">
+<meta name="description" content="Hlas is a macOS menu bar app for dictation and meeting recording, with local WhisperKit, native Parakeet v3, calendar reminders, and an optional self-hosted Parakeet server.">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -915,7 +915,7 @@ footer .container {
         <span class="label label--pink">macOS menu bar app</span>
         <h1>Speak.<br><span class="pink">Text appears.</span></h1>
         <p class="hero-sub">
-          Hlas lives in your menu bar. Press a hotkey, speak naturally, and your words appear wherever your cursor is. Run WhisperKit or Parakeet v3 entirely on your Mac, with your own remote Parakeet server available when you want to offload the work.
+          Hlas lives in your menu bar. Press a hotkey to dictate wherever your cursor is, or record a meeting with microphone and system audio together. Calendar reminders can prompt you when a matching meeting starts. Run WhisperKit or Parakeet v3 entirely on your Mac, with your own remote Parakeet server available when you want to offload dictation.
         </p>
         <a href="https://github.com/davidbudac/hlas-releases/releases/latest/download/Hlas.dmg" class="hero-cta">Download for macOS</a>
         <p class="hero-badge">macOS 14+ Sonoma &middot; Apple Silicon</p>
@@ -997,7 +997,7 @@ footer .container {
     <p class="hotkey-result">
       Press &rarr; Speak &rarr; <span>Text appears at your cursor</span> &rarr; Done.
     </p>
-    <p style="font-family:var(--mono);font-size:12px;color:#999;margin-top:16px;letter-spacing:0.05em;">The hotkey is fully configurable in settings.</p>
+    <p style="font-family:var(--mono);font-size:12px;color:#999;margin-top:16px;letter-spacing:0.05em;">The hotkey is fully configurable. Switch between push-to-talk and toggle mode from the main popover, and assign a separate shortcut for meeting recording.</p>
   </div>
 </section>
 
@@ -1095,7 +1095,7 @@ footer .container {
         <span class="feature-num">01</span>
         <div>
           <p class="feature-title">Menu Bar Native</p>
-          <p class="feature-desc">Lives in your menu bar. No dock icon, no windows to manage. Always one hotkey away. Real-time audio level visualization shows recording state at a glance.</p>
+          <p class="feature-desc">Lives in your menu bar. No dock icon or full app window to manage. Dictation and meeting controls sit side by side in the main popover, with live audio-level feedback while recording.</p>
         </div>
         <span class="feature-tag">Core</span>
       </div>
@@ -1138,6 +1138,30 @@ footer .container {
           <p class="feature-desc">Text is inserted wherever your cursor is. Browsers, IDEs, notes apps, Slack, email -- any text field in any application.</p>
         </div>
         <span class="feature-tag">Universal</span>
+      </div>
+      <div class="feature-row">
+        <span class="feature-num">07</span>
+        <div>
+          <p class="feature-title">Meeting Recording</p>
+          <p class="feature-desc">Record microphone and system audio together from the main popover, menu bar menu, or an optional hotkey. Hlas mixes both tracks, transcribes the meeting locally, and saves the result to History. System-audio capture requires macOS 14.4+.</p>
+        </div>
+        <span class="feature-tag">Meetings</span>
+      </div>
+      <div class="feature-row">
+        <span class="feature-num">08</span>
+        <div>
+          <p class="feature-title">Calendar Recording Reminders</p>
+          <p class="feature-desc">Choose which calendars to watch, filter events by title keywords, and optionally require a Zoom, Google Meet, Microsoft Teams, or Webex link. Start recording from the notification, or enable a cancellable 10-second auto-start countdown. Hlas must be running.</p>
+        </div>
+        <span class="feature-tag">Calendar</span>
+      </div>
+      <div class="feature-row">
+        <span class="feature-num">09</span>
+        <div>
+          <p class="feature-title">Clear Permission Recovery</p>
+          <p class="feature-desc">See live Microphone and Accessibility status, jump directly to the right System Settings pane, and rerun the setup assistant after a permission reset. A menu bar badge warns you if required access is revoked.</p>
+        </div>
+        <span class="feature-tag">macOS</span>
       </div>
     </div>
   </div>
