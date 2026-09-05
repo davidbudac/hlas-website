@@ -852,6 +852,109 @@ footer .container {
   color: #555;
 }
 
+/* ---- CLEANUP PIPELINE ---- */
+.cleanup-section { padding: 96px 0; }
+.cleanup-section h2 { font-size: clamp(32px, 5vw, 56px); margin-bottom: 20px; }
+.cleanup-lead {
+  font-size: 17px;
+  line-height: 1.6;
+  color: #bbb;
+  max-width: 720px;
+  margin-bottom: 56px;
+}
+.cleanup-lead strong { color: var(--white); font-weight: 700; }
+.new-badge {
+  display: inline-block;
+  background: var(--pink);
+  color: var(--white);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  margin-left: 10px;
+  vertical-align: 4px;
+}
+.pipeline {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  flex-wrap: wrap;
+}
+.pipe-step {
+  flex: 1 1 180px;
+  border: 1px solid #333;
+  padding: 24px 20px;
+  min-width: 0;
+}
+.pipe-step--accent { border-color: var(--pink); background: rgba(233, 30, 99, 0.12); }
+.pipe-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 12px;
+}
+.pipe-step h3 { font-size: 18px; margin-bottom: 8px; }
+.pipe-step p {
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.7;
+  color: #999;
+}
+.pipe-arrow {
+  flex: 0 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--pink);
+  font-size: 20px;
+  font-family: var(--mono);
+}
+.cleanup-example {
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr;
+  align-items: stretch;
+  gap: 0;
+  margin-top: 48px;
+  max-width: 900px;
+}
+.cleanup-example > div:not(.pipe-arrow) {
+  border: 1px solid #333;
+  padding: 20px;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.cleanup-example .after { border-color: var(--pink); color: var(--white); }
+.cleanup-example .before { color: #888; }
+.cleanup-example .cap {
+  display: block;
+  border: none;
+  padding: 0 0 8px;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--pink);
+}
+.cleanup-note {
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.7;
+  color: #777;
+  max-width: 900px;
+  margin-top: 32px;
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 768px) {
+  .pipeline { flex-direction: column; }
+  .pipe-arrow { flex: 0 0 32px; transform: rotate(90deg); }
+  .cleanup-example { grid-template-columns: 1fr; }
+  .cleanup-example .pipe-arrow { transform: rotate(90deg); height: 40px; }
+}
+
 /* ---- RESPONSIVE ---- */
 @media (max-width: 768px) {
   .hero-grid { grid-template-columns: 1fr; text-align: center; }
@@ -896,6 +999,7 @@ footer .container {
   <div class="container">
     <a href="#" class="nav-logo"><img src="icon.png" alt="" width="32" height="32" style="vertical-align:middle;margin-right:8px;border:none;">hlas<span>.</span></a>
     <div class="nav-links">
+      <a href="#cleanup">AI cleanup</a>
       <a href="#features">Features</a>
       <a href="#engines">Engines</a>
       <a href="#languages">Languages</a>
@@ -949,6 +1053,66 @@ footer .container {
         <img src="icon.png" alt="Hlas app icon — roaring cat with audio waveform" class="app-icon" width="240" height="240" fetchpriority="high">
       </div>
     </div>
+  </div>
+</section>
+
+<!-- WAVEFORM DIVIDER -->
+<!-- AI CLEANUP PIPELINE (BLACK) -->
+<section class="cleanup-section section-black" id="cleanup">
+  <div class="container">
+    <span class="label label--pink">// two models, one hotkey</span>
+    <h2>Transcribed, then cleaned up.<span class="new-badge">New</span></h2>
+    <p class="cleanup-lead">
+      Hlas now runs a <strong>second model</strong> after the transcription. The first one turns
+      your speech into text. The second one rewrites that text into something you would actually
+      send: fillers dropped, false starts resolved to what you landed on, punctuation and
+      capitalization applied, spoken numbers, dates, currency and email addresses written out.
+      <strong>Both run on your Mac.</strong> Nothing is uploaded.
+    </p>
+
+    <div class="pipeline">
+      <div class="pipe-step">
+        <span class="pipe-num">01</span>
+        <h3>Record</h3>
+        <p>Hold the hotkey and speak. Audio stays in memory.</p>
+      </div>
+      <div class="pipe-arrow" aria-hidden="true">&rarr;</div>
+      <div class="pipe-step">
+        <span class="pipe-num">02</span>
+        <h3>Transcribe</h3>
+        <p>WhisperKit or Parakeet v3, locally. Raw words, exactly as spoken.</p>
+      </div>
+      <div class="pipe-arrow" aria-hidden="true">&rarr;</div>
+      <div class="pipe-step pipe-step--accent">
+        <span class="pipe-num">03</span>
+        <h3>Clean up</h3>
+        <p>S1-mini rewrites the raw transcript on-device. This is the new part.</p>
+      </div>
+      <div class="pipe-arrow" aria-hidden="true">&rarr;</div>
+      <div class="pipe-step">
+        <span class="pipe-num">04</span>
+        <h3>Insert</h3>
+        <p>Finished text lands at your cursor, in whatever app you are in.</p>
+      </div>
+    </div>
+
+    <div class="cleanup-example">
+      <div class="before">
+        <span class="cap">After step 02</span>
+        um so lets meet on the uh fifth of march no sorry the sixth at like two thirty and ill send
+        the notes to dave at example dot com
+      </div>
+      <div class="pipe-arrow" aria-hidden="true">&rarr;</div>
+      <div class="after">
+        <span class="cap">After step 03</span>
+        Let's meet on the 6th of March at 2:30, and I'll send the notes to dave@example.com.
+      </div>
+    </div>
+
+    <p class="cleanup-note">
+      Settings &rsaquo; Text &rsaquo; AI cleanup. Off by default. Four tones, optional bullet lists
+      and email layout. Downloads a ~350&nbsp;MB model on first use; English only for now.
+    </p>
   </div>
 </section>
 
